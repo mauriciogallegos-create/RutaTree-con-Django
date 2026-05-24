@@ -3,286 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trámites Administrativos</title>
+    <title>Tramites Administrativos</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f7fa;
-            color: #2c3e50;
-            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #eef2f7;
+            color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         nav {
-            background: #1a3a5c;
+            background: #0f172a;
             color: white;
-            padding: 12px 30px;
+            padding: 0 24px;
             display: flex;
             align-items: center;
-            gap: 30px;
+            height: 50px;
+            gap: 6px;
+            flex-shrink: 0;
         }
-        nav h1 { font-size: 20px; font-weight: 600; }
+        nav .brand { font-weight: 700; font-size: 17px; margin-right: 24px; }
         nav a {
-            color: #b0cfe0;
+            color: #94a3b8;
             text-decoration: none;
-            font-size: 14px;
-            padding: 6px 14px;
+            font-size: 13px;
+            padding: 7px 16px;
             border-radius: 4px;
-            transition: 0.2s;
+            cursor: pointer;
         }
-        nav a:hover, nav a.active { background: #2a5a8c; color: white; }
-        .container { padding: 25px 30px; display: flex; gap: 25px; }
-        .sidebar { width: 320px; flex-shrink: 0; }
-        .main { flex: 1; }
+        nav a:hover { color: white; background: rgba(255,255,255,0.1); }
+        nav a.act { color: white; background: rgba(96,165,250,0.2); }
+        .app { display: flex; flex: 1; overflow: hidden; }
+        .side {
+            width: 300px;
+            flex-shrink: 0;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 14px;
+            overflow-y: auto;
+        }
+        .main { flex: 1; overflow-y: auto; padding: 16px; }
         .card {
             background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-        }
-        .card h2 {
-            font-size: 16px;
-            color: #1a3a5c;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #eef2f7;
-        }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stat-item {
-            background: #f8fafc;
-            padding: 12px;
             border-radius: 6px;
-            text-align: center;
+            padding: 14px;
+            margin-bottom: 14px;
+            border: 1px solid #e2e8f0;
         }
-        .stat-item .num { font-size: 26px; font-weight: 700; color: #1a3a5c; }
-        .stat-item .label { font-size: 12px; color: #7f8c9b; margin-top: 2px; }
-
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #4a5a6a; }
-        .form-group input, .form-group select, .form-group textarea {
+        .card h3 { font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9; }
+        .grp { margin-bottom: 8px; }
+        .grp label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 2px; }
+        .grp input, .grp select, .grp textarea {
             width: 100%;
-            padding: 8px 10px;
-            border: 1px solid #d0d7e0;
+            padding: 6px 8px;
+            border: 1px solid #cbd5e1;
             border-radius: 4px;
             font-size: 13px;
         }
-        .form-group textarea { resize: vertical; min-height: 50px; }
+        .grp textarea { min-height: 40px; resize: vertical; font-family: inherit; }
         .btn {
-            padding: 8px 16px;
+            padding: 6px 14px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-        .btn-primary { background: #1a73e8; color: white; }
-        .btn-primary:hover { background: #1557b0; }
-        .btn-success { background: #188038; color: white; }
-        .btn-success:hover { background: #0d652d; }
-        .btn-danger { background: #d93025; color: white; }
-        .btn-danger:hover { background: #a50e0e; }
-        .btn-sm { padding: 5px 10px; font-size: 12px; }
-        .btn-group { display: flex; gap: 8px; margin-top: 10px; }
-
-        ul.tree { list-style: none; padding-left: 0; }
-        ul.tree ul { list-style: none; padding-left: 22px; }
-
-        .tree-node { margin: 2px 0; }
-        .node-row {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: 0.15s;
-        }
-        .node-row:hover { background: #eef2f7; }
-        .node-row.selected { background: #d4e4fc; }
-        .node-row.highlight { background: #fff3cd; }
-        .toggle-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
-            color: #6a7a8a;
-            flex-shrink: 0;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-        .toggle-btn:hover { background: #d0d7e0; }
-        .toggle-btn.leaf { visibility: hidden; }
-        .node-icon { font-size: 16px; }
-        .node-label { font-size: 13px; }
-        .node-badge {
-            font-size: 10px;
-            background: #e8ecf0;
-            color: #5a6a7a;
-            padding: 1px 6px;
-            border-radius: 8px;
-            margin-left: auto;
-        }
-
-        #searchBox {
-            width: 100%;
-            padding: 8px 10px;
-            border: 1px solid #d0d7e0;
-            border-radius: 4px;
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-
-        .detail-header { display: flex; justify-content: space-between; align-items: center; }
-        .detail-path { font-size: 12px; color: #7f8c9b; margin-bottom: 12px; }
-        .detail-field { margin: 8px 0; font-size: 13px; }
-        .detail-field strong { color: #4a5a6a; }
-        .empty-state {
-            text-align: center;
-            color: #9aabbb;
-            padding: 50px 20px;
-        }
-        .empty-state h2 { font-size: 18px; margin-bottom: 6px; color: #6a7a8a; }
-        .message {
-            padding: 10px 16px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: none;
-            font-size: 13px;
-        }
-        .message.success { display: block; background: #e6f4ea; color: #1e7e34; border: 1px solid #b7dfc5; }
-        .message.error { display: block; background: #fce8e6; color: #c5221f; border: 1px solid #f5c6cb; }
-
-        .tab-bar { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 2px solid #eef2f7; }
-        .tab-bar button {
-            padding: 8px 18px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 13px;
-            color: #7f8c9b;
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-        }
-        .tab-bar button.active { color: #1a73e8; border-bottom-color: #1a73e8; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .resultado-consola {
-            background: #1e2a3a;
-            color: #b0d0e0;
-            font-family: 'Consolas', monospace;
             font-size: 12px;
-            padding: 12px;
-            border-radius: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            margin-top: 10px;
+            font-weight: 600;
+        }
+        .btn-pri { background: #2563eb; color: white; }
+        .btn-pri:hover { background: #1d4ed8; }
+        .btn-suc { background: #16a34a; color: white; }
+        .btn-suc:hover { background: #15803d; }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-out { background: transparent; border: 1px solid #cbd5e1; color: #475569; }
+        .btn-out:hover { background: #f1f5f9; }
+        .btn-full { width: 100%; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .fm-msg {
+            font-size: 12px; padding: 6px 10px; border-radius: 4px; margin-bottom: 8px; display: none;
+        }
+        .fm-msg.ok { display: block; background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .fm-msg.err { display: block; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .stat { background: #f8fafc; padding: 8px; border-radius: 4px; text-align: center; border: 1px solid #e2e8f0; }
+        .stat .n { font-size: 20px; font-weight: 800; color: #0f172a; }
+        .stat .l { font-size: 10px; color: #64748b; text-transform: uppercase; }
+
+        .tree { list-style: none; padding-left: 0; }
+        .tree ul { list-style: none; padding-left: 24px; }
+        .nodo { padding: 3px 0; }
+        .nodo-r {
+            display: flex; align-items: center; gap: 4px;
+            padding: 4px 8px; border-radius: 4px; cursor: pointer;
+            border: 1.5px solid transparent;
+        }
+        .nodo-r:hover { background: #eef2f7; }
+        .nodo-r.sel { background: #dbeafe; border-color: #93c5fd; }
+        .tg {
+            width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
+            font-size: 9px; color: #64748b; flex-shrink: 0;
+        }
+        .tg.hidden { visibility: hidden; }
+        .nm { font-size: 13px; font-weight: 500; }
+        .tag {
+            font-size: 10px; background: #f1f5f9; color: #64748b;
+            padding: 0 6px; border-radius: 8px; margin-left: auto;
+        }
+
+        .det h2 { font-size: 17px; color: #0f172a; }
+        .det .m { font-size: 12px; color: #64748b; margin: 2px 0 12px; }
+        .det .d { margin: 4px 0; font-size: 13px; }
+        .det .d strong { color: #475569; display: inline-block; min-width: 90px; }
+        .empty { text-align: center; color: #94a3b8; padding: 40px 20px; }
+
+        .msg-top {
+            padding: 0; text-align: center; font-size: 13px; font-weight: 500;
+            overflow: hidden; max-height: 0; transition: 0.3s;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .msg-top.show { padding: 10px 20px; max-height: 60px; }
+        .msg-top.ok { background: #dcfce7; color: #166534; border-bottom: 2px solid #86efac; }
+        .msg-top.err { background: #fee2e2; color: #991b1b; border-bottom: 2px solid #fca5a5; }
+        .log {
+            background: #0f172a; color: #a5f3fc; font-family: Consolas, monospace;
+            font-size: 12px; padding: 10px; border-radius: 4px;
+            max-height: 160px; overflow-y: auto; white-space: pre-wrap; margin-top: 6px;
         }
     </style>
 </head>
 <body>
 
 <nav>
-    <h1>&#128195; Trámites Administrativos</h1>
-    <div>
-        <a href="#" class="active" onclick="mostrarPagina('arbol')">Árbol</a>
-        <a href="#" onclick="mostrarPagina('explorar')">Explorar</a>
-        <a href="#" onclick="mostrarPagina('estadisticas')">Estadísticas</a>
-    </div>
+    <div class="brand">TramitesApp</div>
+    <a class="act" onclick="irA('inicio',this)">Inicio</a>
+    <a onclick="irA('arbol',this)">Arbol</a>
+    <a onclick="irA('explorar',this)">Explorar</a>
+    <a onclick="irA('stats',this)">Estadisticas</a>
 </nav>
 
-<div id="message" class="message" style="margin:15px 30px 0"></div>
+<div id="msgTop" class="msg-top"></div>
 
-<div class="container">
-    <div class="sidebar">
+<div class="app">
+    <div class="side">
         <div class="card">
-            <h2>Agregar Nodo</h2>
-            <div class="form-group">
+            <h3>NUEVO NODO</h3>
+            <div id="fmMsg" class="fm-msg"></div>
+            <div class="grp">
                 <label>Nombre</label>
-                <input type="text" id="newNombre" placeholder="Ej: Solicitud">
+                <input type="text" id="nomIn" placeholder="Ej: Solicitud">
             </div>
-            <div class="form-group">
-                <label>Descripción</label>
-                <textarea id="newDescripcion" placeholder="Descripción breve"></textarea>
+            <div class="grp">
+                <label>Descripcion</label>
+                <textarea id="descIn" placeholder="Descripcion del nodo"></textarea>
             </div>
-            <div class="form-group">
+            <div class="grp">
                 <label>Nodo padre</label>
-                <select id="newParent"><option value="">-- Raíz --</option></select>
+                <select id="padreIn"><option value="">-- Raiz --</option></select>
             </div>
-            <button class="btn btn-success" onclick="agregarNodo()" style="width:100%">+ Agregar</button>
+            <button class="btn btn-suc btn-full" id="btnCrear" onclick="crearNodo()">+ Crear nodo</button>
         </div>
 
         <div class="card">
-            <h2>Información del Árbol</h2>
-            <div class="stats-grid">
-                <div class="stat-item"><div class="num" id="totalNodos">0</div><div class="label">Total nodos</div></div>
-                <div class="stat-item"><div class="num" id="alturaArbol">0</div><div class="label">Altura</div></div>
+            <h3>INFORMACION</h3>
+            <div class="stats">
+                <div class="stat"><div class="n" id="sNodos">0</div><div class="l">Nodos</div></div>
+                <div class="stat"><div class="n" id="sAltura">0</div><div class="l">Altura</div></div>
+                <div class="stat"><div class="n" id="sRaices">0</div><div class="l">Raices</div></div>
+                <div class="stat"><div class="n" id="sHojas">0</div><div class="l">Hojas</div></div>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="actualizarStats()" style="width:100%;margin-top:10px">Actualizar</button>
         </div>
 
         <div class="card">
-            <h2>Buscar Nodo</h2>
-            <input type="text" id="searchBox" placeholder="Buscar por nombre..." oninput="buscarNodos()">
-            <div id="searchResults"></div>
+            <h3>ACCIONES</h3>
+            <button class="btn btn-pri btn-full" onclick="cargarEjemplo()" style="margin-bottom:6px">Cargar datos ejemplo</button>
+            <button class="btn btn-out btn-full" onclick="limpiarTodo()">Limpiar todo</button>
         </div>
     </div>
 
-    <div class="main">
-        <div id="pagina-arbol" class="tab-content active">
+    <div class="main" id="contenido">
+        <div id="pagInicio" class="card" style="text-align:center;padding:50px 30px">
+            <h1 style="font-size:24px;color:#0f172a;margin-bottom:8px">Sistema de Tramites Administrativos</h1>
+            <p style="color:#64748b;max-width:500px;margin:0 auto 20px;line-height:1.6">
+                Aplicacion basada en un <strong>arbol generico</strong> para organizar jerarquicamente
+                los tramites y servicios administrativos.
+            </p>
+            <button class="btn btn-pri" onclick="irA('arbol',document.querySelector('nav a[onclick*=\"arbol\"]'))">Ver Arbol</button>
+        </div>
+
+        <div id="pagArbol" style="display:none">
             <div class="card">
-                <h2>Jerarquía de Trámites</h2>
-                <div id="treeRoot">
-                    <div class="empty-state">
-                        <h2>Árbol vacío</h2>
-                        <p>Agrega nodos usando el panel lateral.</p>
-                    </div>
+                <h3>JERARQUIA DE TRAMITES</h3>
+                <div id="treeRoot"><div class="empty"><h3>Arbol vacio</h3><p>Agrega nodos desde el panel lateral.</p></div></div>
+            </div>
+        </div>
+
+        <div id="pagExplorar" style="display:none">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div class="card">
+                    <h3>RECORRIDO EN PREORDEN</h3>
+                    <button class="btn btn-pri" onclick="ejecRec()">Ejecutar</button>
+                    <div id="conRec" class="log">Presiona "Ejecutar" para ver el recorrido.</div>
+                </div>
+                <div class="card">
+                    <h3>BUSCAR POR ID</h3>
+                    <div class="grp"><input type="number" id="busId" placeholder="ID del nodo"></div>
+                    <button class="btn btn-pri" onclick="ejecBusId()">Buscar</button>
+                    <div id="conBusId" class="log">Presiona "Buscar" para buscar.</div>
+                </div>
+                <div class="card">
+                    <h3>CONTAR NODOS</h3>
+                    <button class="btn btn-pri" onclick="ejecContar()">Contar</button>
+                    <div id="conContar" class="log">Presiona "Contar".</div>
+                </div>
+                <div class="card">
+                    <h3>ALTURA DEL ARBOL</h3>
+                    <button class="btn btn-pri" onclick="ejecAltura()">Calcular</button>
+                    <div id="conAltura" class="log">Presiona "Calcular".</div>
+                </div>
+                <div class="card">
+                    <h3>OBTENER HIJOS</h3>
+                    <div class="grp"><input type="number" id="hijId" placeholder="ID del nodo"></div>
+                    <button class="btn btn-pri" onclick="ejecHijos()">Obtener hijos</button>
+                    <div id="conHijos" class="log">Presiona "Obtener hijos".</div>
+                </div>
+                <div class="card">
+                    <h3>EXPORTAR A JSON</h3>
+                    <button class="btn btn-pri" onclick="ejecJSON()">Exportar</button>
+                    <div id="conJSON" class="log">Presiona "Exportar".</div>
                 </div>
             </div>
         </div>
 
-        <div id="pagina-explorar" class="tab-content">
-            <div style="display:flex;gap:20px">
-                <div class="card" style="flex:1">
-                    <h2>Recorrido del Árbol</h2>
-                    <button class="btn btn-primary btn-sm" onclick="ejecutarRecorrido()">Ejecutar recorrido</button>
-                    <div id="resultadoRecorrido" class="resultado-consola"></div>
-                </div>
-                <div class="card" style="flex:1">
-                    <h2>Buscar Nodo por ID</h2>
-                    <div class="form-group">
-                        <input type="number" id="buscarId" placeholder="Ingresar ID">
-                    </div>
-                    <button class="btn btn-primary btn-sm" onclick="ejecutarBusquedaId()">Buscar</button>
-                    <div id="resultadoBusquedaId" class="resultado-consola"></div>
-                </div>
+        <div id="pagStats" style="display:none">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
+                <div class="stat"><div class="n" id="eNodos">0</div><div class="l">Total nodos</div></div>
+                <div class="stat"><div class="n" id="eAltura">0</div><div class="l">Altura</div></div>
+                <div class="stat"><div class="n" id="eRaices">0</div><div class="l">Raices</div></div>
+                <div class="stat"><div class="n" id="eHojas">0</div><div class="l">Hojas</div></div>
+                <div class="stat"><div class="n" id="eInternos">0</div><div class="l">Internos</div></div>
+                <div class="stat"><div class="n" id="eProm">0</div><div class="l">Prom hijos/raiz</div></div>
             </div>
-        </div>
-
-        <div id="pagina-estadisticas" class="tab-content">
             <div class="card">
-                <h2>Estadísticas del Árbol</h2>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px">
-                    <div class="stat-item"><div class="num" id="statNodos">0</div><div class="label">Total de nodos</div></div>
-                    <div class="stat-item"><div class="num" id="statAltura">0</div><div class="label">Altura del árbol</div></div>
-                    <div class="stat-item"><div class="num" id="statRaices">0</div><div class="label">Nodos raíz</div></div>
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="actualizarEstadisticas()" style="margin-top:15px">Actualizar estadísticas</button>
-            </div>
-
-            <div class="card">
-                <h2>Detalle del Nodo</h2>
-                <div id="detailPanel">
-                    <div class="empty-state">
-                        <h2>Selecciona un nodo</h2>
-                        <p>Haz clic en un nodo en el árbol para ver sus detalles.</p>
-                    </div>
-                </div>
+                <h3>DETALLE DEL NODO</h3>
+                <div id="detPanel"><div class="empty"><p>Selecciona un nodo en el arbol.</p></div></div>
             </div>
         </div>
     </div>
@@ -292,275 +259,238 @@
 // ================================
 // Clase Nodo
 // ================================
-
 class Nodo {
     constructor(id, nombre) {
         this.id = id;
         this.nombre = nombre;
         this.hijos = [];
     }
-
     agregarHijo(nodoHijo) {
         this.hijos.push(nodoHijo);
     }
 }
 
 // ================================
-// Clase Árbol Genérico
+// Clase Arbol Generico
 // ================================
-
 class ArbolGenerico {
-    constructor(raiz) {
-        this.raiz = raiz;
-    }
+    constructor(raiz) { this.raiz = raiz; }
 
     buscarNodo(nodo, id) {
-        if (nodo.id === id) {
-            return nodo;
-        }
-        for (let hijo of nodo.hijos) {
-            let resultado = this.buscarNodo(hijo, id);
-            if (resultado !== null) {
-                return resultado;
-            }
+        if (nodo.id === id) return nodo;
+        for (let h of nodo.hijos) {
+            let r = this.buscarNodo(h, id);
+            if (r !== null) return r;
         }
         return null;
     }
 
     recorrerArbol(nodo) {
-        let result = [];
-        result.push(nodo.nombre);
-        for (let hijo of nodo.hijos) {
-            result = result.concat(this.recorrerArbol(hijo));
-        }
-        return result;
+        let r = [nodo.nombre];
+        for (let h of nodo.hijos) r = r.concat(this.recorrerArbol(h));
+        return r;
     }
 
     contarNodos(nodo) {
-        let contador = 1;
-        for (let hijo of nodo.hijos) {
-            contador += this.contarNodos(hijo);
-        }
-        return contador;
+        let c = 1;
+        for (let h of nodo.hijos) c += this.contarNodos(h);
+        return c;
     }
 
     calcularAltura(nodo) {
-        if (nodo.hijos.length === 0) {
-            return 1;
-        }
-        let alturas = [];
-        for (let hijo of nodo.hijos) {
-            alturas.push(this.calcularAltura(hijo));
-        }
-        return 1 + Math.max(...alturas);
+        if (nodo.hijos.length === 0) return 1;
+        let a = [];
+        for (let h of nodo.hijos) a.push(this.calcularAltura(h));
+        return 1 + Math.max(...a);
     }
 
     obtenerHijos(id) {
-        let nodo = this.buscarNodo(this.raiz, id);
-        if (nodo) {
-            return nodo.hijos;
-        }
-        return [];
+        let n = this.buscarNodo(this.raiz, id);
+        return n ? n.hijos : [];
     }
 
     convertirJSON(nodo) {
-        return {
-            id: nodo.id,
-            nombre: nodo.nombre,
-            hijos: nodo.hijos.map(hijo => this.convertirJSON(hijo))
-        };
+        return { id: nodo.id, nombre: nodo.nombre, hijos: nodo.hijos.map(h => this.convertirJSON(h)) };
     }
 
     buscarPorNombre(nodo, texto) {
-        let resultados = [];
-        if (nodo.nombre.toLowerCase().includes(texto.toLowerCase())) {
-            resultados.push(nodo);
-        }
-        for (let hijo of nodo.hijos) {
-            resultados = resultados.concat(this.buscarPorNombre(hijo, texto));
-        }
-        return resultados;
+        let r = [];
+        if (nodo.nombre.toLowerCase().includes(texto.toLowerCase())) r.push(nodo);
+        for (let h of nodo.hijos) r = r.concat(this.buscarPorNombre(h, texto));
+        return r;
+    }
+
+    contarHojas(nodo) {
+        if (nodo.hijos.length === 0) return 1;
+        let h = 0;
+        for (let c of nodo.hijos) h += this.contarHojas(c);
+        return h;
     }
 }
 
 // ================================
 // Estado global
 // ================================
+let arbol = null;
+let selId = null;
 
-let arbolGlobal = null;
-let nodosPlanos = [];
+function byId(id) { return document.getElementById(id); }
+function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
-// ================================
-// Funciones auxiliares
-// ================================
-
-function escapeHtml(text) {
-    const d = document.createElement('div');
-    d.textContent = text;
-    return d.innerHTML;
+function msgTop(t, tipo) {
+    const el = byId('msgTop');
+    el.textContent = t;
+    el.className = 'msg-top show ' + tipo;
+    setTimeout(() => el.className = 'msg-top', 4000);
 }
 
-function mostrarMensaje(texto, tipo) {
-    const msg = document.getElementById('message');
-    msg.textContent = texto;
-    msg.className = 'message ' + tipo;
-    setTimeout(() => { msg.style.display = 'none'; }, 4000);
+function fmMsg(t, tipo) {
+    const el = byId('fmMsg');
+    el.textContent = t;
+    el.className = 'fm-msg ' + tipo;
+    setTimeout(() => el.className = 'fm-msg', 4000);
 }
 
-function mostrarPagina(pagina) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('nav a').forEach(el => el.classList.remove('active'));
-    document.getElementById('pagina-' + pagina).classList.add('active');
-    document.querySelector('nav a[onclick*="' + pagina + '"]').classList.add('active');
+function irA(pag, el) {
+    document.querySelectorAll('#contenido > div').forEach(d => d.style.display = 'none');
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('act'));
+    const target = byId('pag' + pag.charAt(0).toUpperCase() + pag.slice(1));
+    if (target) target.style.display = 'block';
+    if (el) el.classList.add('act');
+    if (pag === 'stats') actStats();
 }
 
 // ================================
-// Construir árbol desde API
+// Construir arbol desde API
 // ================================
-
 async function cargarArbol() {
     try {
         const res = await fetch('/soporte/api/tree/');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const json = await res.json();
         const data = json.data;
 
         if (data.length === 0) {
-            arbolGlobal = null;
-            document.getElementById('treeRoot').innerHTML =
-                '<div class="empty-state"><h2>Árbol vacío</h2><p>Agrega nodos usando el panel lateral.</p></div>';
+            arbol = null;
+            selId = null;
+            byId('treeRoot').innerHTML = '<div class="empty"><h3>Arbol vacio</h3><p>Agrega nodos desde el panel lateral.</p></div>';
+            actSidebarStats();
             return;
         }
 
-        const raicesNodo = data.map(r => construirNodo(r));
-        const raiz = new Nodo(-1, '__RAIZ__');
-        raicesNodo.forEach(r => raiz.agregarHijo(r));
-        arbolGlobal = new ArbolGenerico(raiz);
+        const raices = data.map(r => buildNodo(r));
+        const raizV = new Nodo(-1, '__RAIZ__');
+        raices.forEach(r => raizV.agregarHijo(r));
+        arbol = new ArbolGenerico(raizV);
 
-        renderTree(raicesNodo);
-        await cargarSelectores();
-        actualizarStats();
+        byId('treeRoot').innerHTML = renderTree(raices);
+        actSidebarStats();
+        llenarSel();
     } catch (e) {
-        mostrarMensaje('Error al cargar árbol: ' + e.message, 'error');
+        msgTop('Error al cargar arbol: ' + e.message, 'err');
+        console.error(e);
     }
 }
 
-function construirNodo(data) {
-    const nodo = new Nodo(data.id, data.nombre);
-    if (data.hijos && data.hijos.length > 0) {
-        data.hijos.forEach(h => nodo.agregarHijo(construirNodo(h)));
-    }
-    return nodo;
+function buildNodo(data) {
+    const n = new Nodo(data.id, data.nombre);
+    if (data.hijos && data.hijos.length > 0) data.hijos.forEach(h => n.agregarHijo(buildNodo(h)));
+    return n;
 }
 
-// ================================
-// Renderizar árbol visual
-// ================================
-
-function renderTree(nodos, nivel) {
+function renderTree(nodos) {
     if (!nodos || nodos.length === 0) return '<ul class="tree"></ul>';
-    let html = '<ul class="tree">';
+    let h = '<ul class="tree">';
     for (const n of nodos) {
-        const tieneHijos = n.hijos.length > 0;
-        html += '<li class="tree-node">';
-        html += '<div class="node-row" onclick="seleccionarNodo(' + n.id + ', this)">';
-        html += '<span class="toggle-btn' + (tieneHijos ? '' : ' leaf') + '" onclick="event.stopPropagation(); toggleChildren(this)">' +
-                (tieneHijos ? '&#9660;' : '&#9679;') + '</span>';
-        html += '<span class="node-icon">' + (tieneHijos ? '&#128193;' : '&#128196;') + '</span>';
-        html += '<span class="node-label">' + escapeHtml(n.nombre) + '</span>';
-        html += '<span class="node-badge">#' + n.id + '</span>';
-        html += '</div>';
-        html += '<ul style="display:' + (tieneHijos ? 'block' : 'none') + '">';
-        if (tieneHijos) html += renderTree(n.hijos, (nivel || 0) + 1);
-        html += '</ul>';
-        html += '</li>';
+        const hijos = n.hijos.length > 0;
+        h += '<li class="nodo">';
+        h += '<div class="nodo-r' + (selId === n.id ? ' sel' : '') + '" onclick="selNodo(' + n.id + ',this)">';
+        h += '<span class="tg' + (hijos ? '' : ' hidden') + '" onclick="event.stopPropagation();toggle(this)">' + (hijos ? 'v' : '') + '</span>';
+        h += '<span class="nm">' + esc(n.nombre) + '</span>';
+        h += '<span class="tag">#' + n.id + '</span>';
+        h += '</div>';
+        h += '<ul style="display:' + (hijos ? 'block' : 'none') + '">';
+        if (hijos) h += renderTree(n.hijos);
+        h += '</ul></li>';
     }
-    html += '</ul>';
-    return html;
+    h += '</ul>';
+    return h;
 }
 
-function toggleChildren(el) {
-    const ul = el.closest('.tree-node').querySelector('ul');
+function toggle(el) {
+    const ul = el.closest('.nodo').querySelector('ul');
     if (ul) {
         ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
-        el.innerHTML = ul.style.display === 'none' ? '&#9654;' : '&#9660;';
+        el.textContent = ul.style.display === 'none' ? '>' : 'v';
     }
 }
 
 // ================================
-// Seleccionar y mostrar detalle
+// Seleccionar nodo
 // ================================
-
-async function seleccionarNodo(id, el) {
-    document.querySelectorAll('.node-row.selected').forEach(r => r.classList.remove('selected'));
-    if (el) el.classList.add('selected');
+async function selNodo(id, el) {
+    document.querySelectorAll('.nodo-r.sel').forEach(c => c.classList.remove('sel'));
+    if (el) el.classList.add('sel');
+    selId = id;
 
     try {
         const res = await fetch('/soporte/api/nodos/' + id + '/');
         const json = await res.json();
         const data = json.data;
-        mostrarDetalle(data);
+        mostrarDet(data);
+        byId('breadcrumb').textContent = data.path || data.nombre;
+        if (byId('pagStats').style.display === 'block') actStats();
     } catch (e) {
-        mostrarMensaje('Error al cargar detalle: ' + e.message, 'error');
+        msgTop('Error: ' + e.message, 'err');
     }
 }
 
-function mostrarDetalle(data) {
-    const panel = document.getElementById('detailPanel');
+function mostrarDet(data) {
+    const panel = byId('detPanel');
+    if (!panel) return;
     const hijos = data.hijos || [];
-    const ruta = data.parent_id ? '(hijo de ID ' + data.parent_id + ')' : 'Nodo raíz';
+    let hh = '';
+    if (hijos.length > 0) {
+        hh = '<div style="margin-top:6px"><strong>Hijos directos:</strong><ul style="margin:4px 0 0 16px;font-size:13px">';
+        hijos.forEach(h => { hh += '<li>' + esc(h.nombre) + ' (#' + h.id + ')</li>'; });
+        hh += '</ul></div>';
+    }
     panel.innerHTML = `
-        <div class="detail-header">
-            <h3 style="margin:0;color:#1a3a5c">${escapeHtml(data.nombre)}</h3>
-            <span class="node-badge">ID: ${data.id}</span>
-        </div>
-        <div class="detail-path">${ruta} | Nivel ${data.depth || 0} | ${data.is_leaf ? 'Hoja' : 'Rama'}</div>
-        <div class="detail-field"><strong>Descripción:</strong> ${escapeHtml(data.descripcion || '(sin descripción)')}</div>
-        <div class="detail-field"><strong>Hijos:</strong> ${hijos.length}</div>
-
-        <hr style="border:none;border-top:1px solid #eef2f7;margin:12px 0">
-
-        <div class="form-group">
-            <label>Nombre</label>
-            <input type="text" id="editNombre" value="${escapeHtml(data.nombre)}">
-        </div>
-        <div class="form-group">
-            <label>Descripción</label>
-            <textarea id="editDescripcion">${escapeHtml(data.descripcion || '')}</textarea>
-        </div>
-        <div class="form-group">
-            <label>Padre</label>
-            <select id="editParent"><option value="">-- Raíz --</option></select>
-        </div>
-        <div class="form-group">
-            <label>Orden</label>
-            <input type="number" id="editOrden" value="${data.orden || 0}">
-        </div>
-        <div class="btn-group">
-            <button class="btn btn-success" onclick="actualizarNodo(${data.id})" style="flex:1">Guardar</button>
-            <button class="btn btn-danger" onclick="eliminarNodo(${data.id})" style="flex:1">Eliminar</button>
+        <div class="det">
+            <h2>${esc(data.nombre)} <span style="font-size:13px;color:#94a3b8;font-weight:400">#${data.id}</span></h2>
+            <div class="m">${data.parent_id ? 'Hijo de ID ' + data.parent_id : 'Nodo raiz'} | Nivel ${data.depth} | ${data.is_leaf ? 'Hoja' : 'Rama'}</div>
+            <div class="d"><strong>Descripcion:</strong> ${esc(data.descripcion || '(sin descripcion)')}</div>
+            <div class="d"><strong>Ruta:</strong> ${esc(data.path || '')}</div>
+            <div class="d"><strong>Orden:</strong> ${data.orden || 0}</div>
+            <div class="d"><strong>Hijos:</strong> ${hijos.length}</div>
+            ${hh}
+            <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0">
+            <div class="grp"><label>Nombre</label><input type="text" id="eNom" value="${esc(data.nombre)}"></div>
+            <div class="grp"><label>Descripcion</label><textarea id="eDesc">${esc(data.descripcion || '')}</textarea></div>
+            <div class="grp"><label>Padre</label><select id="ePadre"><option value="">-- Raiz --</option></select></div>
+            <div class="grp"><label>Orden</label><input type="number" id="eOrden" value="${data.orden || 0}"></div>
+            <button class="btn btn-suc" onclick="actNodo(${data.id})" style="margin-right:6px">Guardar</button>
+            <button class="btn btn-danger" onclick="delNodo(${data.id})">Eliminar</button>
         </div>
     `;
-    cargarSelectores(data.parent_id);
+    setTimeout(() => llenarSel(data.parent_id), 50);
 }
 
 // ================================
-// Selectores
+// Llenar selectores
 // ================================
-
-async function cargarSelectores(selectedId) {
+async function llenarSel(sel) {
     try {
         const res = await fetch('/soporte/api/nodos/');
         const json = await res.json();
-        ['newParent', 'editParent'].forEach(id => {
-            const sel = document.getElementById(id);
-            if (!sel) return;
-            sel.innerHTML = '<option value="">-- Raíz --</option>';
+        ['padreIn', 'ePadre'].forEach(id => {
+            const s = byId(id);
+            if (!s) return;
+            s.innerHTML = '<option value="">-- Raiz --</option>';
             json.data.forEach(n => {
-                sel.innerHTML += '<option value="' + n.id + '">' + escapeHtml(n.nombre) + ' (#' + n.id + ')</option>';
+                s.innerHTML += '<option value="' + n.id + '">' + esc(n.nombre) + ' (#' + n.id + ')</option>';
             });
-            if (selectedId !== undefined && id === 'editParent') {
-                sel.value = selectedId || '';
-            }
+            if (sel !== undefined && id === 'ePadre') s.value = sel || '';
         });
     } catch (e) { console.error(e); }
 }
@@ -568,156 +498,187 @@ async function cargarSelectores(selectedId) {
 // ================================
 // CRUD
 // ================================
-
-async function agregarNodo() {
-    const nombre = document.getElementById('newNombre').value.trim();
-    if (!nombre) { mostrarMensaje('El nombre es obligatorio', 'error'); return; }
-    const descripcion = document.getElementById('newDescripcion').value.trim();
-    const parent_id = document.getElementById('newParent').value || null;
+async function crearNodo() {
+    const nom = byId('nomIn').value.trim();
+    if (!nom) { fmMsg('El nombre es obligatorio', 'err'); return; }
+    const desc = byId('descIn').value.trim();
+    const pid = byId('padreIn').value || null;
+    const btn = byId('btnCrear');
+    btn.disabled = true;
+    btn.textContent = 'Creando...';
     try {
         const res = await fetch('/soporte/api/nodos/create/', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({nombre, descripcion, parent_id: parent_id ? parseInt(parent_id) : null})
+            body: JSON.stringify({nombre: nom, descripcion: desc, parent_id: pid ? parseInt(pid) : null})
         });
         const json = await res.json();
-        if (!res.ok) { mostrarMensaje(json.error || 'Error', 'error'); return; }
-        document.getElementById('newNombre').value = '';
-        document.getElementById('newDescripcion').value = '';
-        mostrarMensaje('Nodo creado correctamente', 'success');
+        if (!res.ok) { fmMsg('Error: ' + (json.error || 'desconocido'), 'err'); btn.disabled = false; btn.textContent = '+ Crear nodo'; return; }
+        byId('nomIn').value = '';
+        byId('descIn').value = '';
+        fmMsg('Nodo "' + nom + '" creado!', 'ok');
+        msgTop('Nodo "' + nom + '" creado correctamente', 'ok');
         await cargarArbol();
-    } catch (e) { mostrarMensaje('Error: ' + e.message, 'error'); }
+    } catch (e) {
+        fmMsg('Error de conexion: ' + e.message, 'err');
+        msgTop('Error: ' + e.message, 'err');
+    }
+    btn.disabled = false;
+    btn.textContent = '+ Crear nodo';
 }
 
-async function actualizarNodo(id) {
-    const nombre = document.getElementById('editNombre').value.trim();
-    if (!nombre) { mostrarMensaje('El nombre es obligatorio', 'error'); return; }
-    const descripcion = document.getElementById('editDescripcion').value.trim();
-    const parent_id = document.getElementById('editParent').value || null;
-    const orden = parseInt(document.getElementById('editOrden').value) || 0;
+async function actNodo(id) {
+    const nom = byId('eNom')?.value?.trim();
+    if (!nom) { msgTop('El nombre es obligatorio', 'err'); return; }
+    const desc = byId('eDesc')?.value?.trim() || '';
+    const pid = byId('ePadre')?.value || null;
+    const orden = parseInt(byId('eOrden')?.value) || 0;
     try {
         const res = await fetch('/soporte/api/nodos/' + id + '/update/', {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({nombre, descripcion, parent_id: parent_id ? parseInt(parent_id) : null, orden})
+            body: JSON.stringify({nombre: nom, descripcion: desc, parent_id: pid ? parseInt(pid) : null, orden: orden})
         });
         const json = await res.json();
-        if (!res.ok) { mostrarMensaje(json.error || 'Error', 'error'); return; }
-        mostrarMensaje('Nodo actualizado', 'success');
+        if (!res.ok) { msgTop('Error: ' + (json.error || 'desconocido'), 'err'); return; }
+        msgTop('Nodo actualizado', 'ok');
         await cargarArbol();
-        await seleccionarNodo(id, null);
-    } catch (e) { mostrarMensaje('Error: ' + e.message, 'error'); }
+        selNodo(id, null);
+    } catch (e) { msgTop('Error: ' + e.message, 'err'); }
 }
 
-async function eliminarNodo(id) {
-    if (!confirm('¿Eliminar este nodo y todos sus hijos?')) return;
+async function delNodo(id) {
+    if (!confirm('Eliminar este nodo y TODOS sus hijos?')) return;
     try {
         const res = await fetch('/soporte/api/nodos/' + id + '/delete/', { method: 'DELETE' });
         const json = await res.json();
-        if (!res.ok) { mostrarMensaje(json.error || 'Error', 'error'); return; }
-        mostrarMensaje('Nodo eliminado', 'success');
-        document.getElementById('detailPanel').innerHTML =
-            '<div class="empty-state"><h2>Selecciona un nodo</h2><p>Haz clic en un nodo en el árbol.</p></div>';
+        if (!res.ok) { msgTop('Error: ' + (json.error || 'desconocido'), 'err'); return; }
+        selId = null;
+        msgTop('Nodo eliminado', 'ok');
+        const panel = byId('detPanel');
+        if (panel) panel.innerHTML = '<div class="empty"><p>Selecciona un nodo en el arbol.</p></div>';
         await cargarArbol();
-    } catch (e) { mostrarMensaje('Error: ' + e.message, 'error'); }
+    } catch (e) { msgTop('Error: ' + e.message, 'err'); }
+}
+
+async function limpiarTodo() {
+    if (!confirm('Eliminar TODOS los nodos del sistema?')) return;
+    try {
+        const res = await fetch('/soporte/api/nodos/');
+        const json = await res.json();
+        for (const n of json.data) {
+            await fetch('/soporte/api/nodos/' + n.id + '/delete/', { method: 'DELETE' });
+        }
+        msgTop('Todos los nodos eliminados', 'ok');
+        arbol = null; selId = null;
+        await cargarArbol();
+        byId('detPanel').innerHTML = '<div class="empty"><p>Selecciona un nodo en el arbol.</p></div>';
+        ['conRec','conBusId','conContar','conAltura','conHijos','conJSON'].forEach(id => {
+            const el = byId(id);
+            if (el) el.textContent = 'Datos eliminados.';
+        });
+    } catch (e) { msgTop('Error: ' + e.message, 'err'); }
+}
+
+async function cargarEjemplo() {
+    try {
+        const res = await fetch('/soporte/api/seed/', { method: 'POST' });
+        const json = await res.json();
+        if (!res.ok) { msgTop(json.error || 'Error', 'err'); return; }
+        msgTop('Datos de ejemplo cargados', 'ok');
+        await cargarArbol();
+    } catch (e) { msgTop('Error: ' + e.message, 'err'); }
 }
 
 // ================================
-// Estadísticas
+// Sidebar stats
 // ================================
-
-function actualizarStats() {
-    if (!arbolGlobal || !arbolGlobal.raiz || arbolGlobal.raiz.hijos.length === 0) {
-        document.getElementById('totalNodos').textContent = '0';
-        document.getElementById('alturaArbol').textContent = '0';
-        return;
-    }
-    const total = arbolGlobal.contarNodos(arbolGlobal.raiz) - 1;
-    const altura = arbolGlobal.calcularAltura(arbolGlobal.raiz) - 1;
-    document.getElementById('totalNodos').textContent = total;
-    document.getElementById('alturaArbol').textContent = altura;
+async function actSidebarStats() {
+    try {
+        const res = await fetch('/soporte/api/tree/stats/');
+        const json = await res.json();
+        const s = json.data;
+        byId('sNodos').textContent = s.total_nodos;
+        byId('sAltura').textContent = s.altura;
+        byId('sRaices').textContent = s.nodos_raiz;
+        byId('sHojas').textContent = s.nodos_hoja;
+    } catch (e) { /* ignore */ }
 }
 
-function actualizarEstadisticas() {
-    if (!arbolGlobal || !arbolGlobal.raiz) {
-        ['statNodos','statAltura','statRaices'].forEach(id => document.getElementById(id).textContent = '0');
-        return;
-    }
-    const total = arbolGlobal.contarNodos(arbolGlobal.raiz) - 1;
-    const altura = arbolGlobal.calcularAltura(arbolGlobal.raiz) - 1;
-    const raices = arbolGlobal.raiz.hijos.length;
-    document.getElementById('statNodos').textContent = total;
-    document.getElementById('statAltura').textContent = altura;
-    document.getElementById('statRaices').textContent = raices;
-}
-
-// ================================
-// Recorrido
-// ================================
-
-function ejecutarRecorrido() {
-    if (!arbolGlobal || !arbolGlobal.raiz || arbolGlobal.raiz.hijos.length === 0) {
-        document.getElementById('resultadoRecorrido').textContent = 'El árbol está vacío.';
-        return;
-    }
-    const orden = arbolGlobal.recorrerArbol(arbolGlobal.raiz);
-    document.getElementById('resultadoRecorrido').textContent =
-        'Recorrido (preorden):\n' + orden.join(' → ');
+async function actStats() {
+    try {
+        const res = await fetch('/soporte/api/tree/stats/');
+        const json = await res.json();
+        const s = json.data;
+        byId('eNodos').textContent = s.total_nodos;
+        byId('eAltura').textContent = s.altura;
+        byId('eRaices').textContent = s.nodos_raiz;
+        byId('eHojas').textContent = s.nodos_hoja;
+        byId('eInternos').textContent = s.nodos_internos;
+        byId('eProm').textContent = s.total_nodos > 0 ? (s.total_nodos / s.nodos_raiz).toFixed(1) : 0;
+        if (selId) {
+            const r = await fetch('/soporte/api/nodos/' + selId + '/');
+            const j = await r.json();
+            mostrarDet(j.data);
+        }
+    } catch (e) { /* ignore */ }
 }
 
 // ================================
-// Buscar por ID
+// Explorar
 // ================================
+function ejecRec() {
+    const c = byId('conRec');
+    if (!arbol || !arbol.raiz || arbol.raiz.hijos.length === 0) { c.textContent = 'Arbol vacio.'; return; }
+    const o = arbol.recorrerArbol(arbol.raiz);
+    c.innerHTML = 'Recorrido (preorden):\n' + o.slice(1).join(' -> ');
+}
 
-function ejecutarBusquedaId() {
-    const id = parseInt(document.getElementById('buscarId').value);
-    if (!id) { document.getElementById('resultadoBusquedaId').textContent = 'Ingresa un ID válido.'; return; }
-    if (!arbolGlobal || !arbolGlobal.raiz) {
-        document.getElementById('resultadoBusquedaId').textContent = 'El árbol está vacío.';
-        return;
-    }
-    const encontrado = arbolGlobal.buscarNodo(arbolGlobal.raiz, id);
-    if (encontrado) {
-        const json = arbolGlobal.convertirJSON(encontrado);
-        document.getElementById('resultadoBusquedaId').textContent =
-            'Nodo encontrado:\n' + JSON.stringify(json, null, 2);
-    } else {
-        document.getElementById('resultadoBusquedaId').textContent =
-            'No se encontró ningún nodo con ID ' + id;
-    }
+function ejecBusId() {
+    const id = parseInt(byId('busId').value);
+    const c = byId('conBusId');
+    if (!id) { c.textContent = 'Ingresa un ID valido.'; return; }
+    if (!arbol || !arbol.raiz) { c.textContent = 'Arbol vacio.'; return; }
+    const e = arbol.buscarNodo(arbol.raiz, id);
+    if (e) { c.innerHTML = 'Nodo encontrado (ID ' + id + '):\n' + JSON.stringify(arbol.convertirJSON(e), null, 2); }
+    else { c.textContent = 'No se encontro nodo con ID ' + id; }
+}
+
+function ejecContar() {
+    const c = byId('conContar');
+    if (!arbol || !arbol.raiz || arbol.raiz.hijos.length === 0) { c.textContent = 'Arbol vacio.'; return; }
+    const t = arbol.contarNodos(arbol.raiz) - 1;
+    const h = arbol.contarHojas(arbol.raiz);
+    c.innerHTML = 'Total nodos: ' + t + '\nHojas: ' + h + '\nInternos: ' + (t - h);
+}
+
+function ejecAltura() {
+    const c = byId('conAltura');
+    if (!arbol || !arbol.raiz || arbol.raiz.hijos.length === 0) { c.textContent = 'Arbol vacio.'; return; }
+    c.textContent = 'Altura del arbol: ' + (arbol.calcularAltura(arbol.raiz) - 1) + ' niveles';
+}
+
+function ejecHijos() {
+    const id = parseInt(byId('hijId').value);
+    const c = byId('conHijos');
+    if (!id) { c.textContent = 'Ingresa un ID valido.'; return; }
+    if (!arbol || !arbol.raiz) { c.textContent = 'Arbol vacio.'; return; }
+    const n = arbol.buscarNodo(arbol.raiz, id);
+    if (!n) { c.textContent = 'No se encontro nodo con ID ' + id; return; }
+    const hijos = n.hijos.map(h => ({ id: h.id, nombre: h.nombre, hijos: h.hijos.length }));
+    c.innerHTML = 'Hijos de "' + n.nombre + '" (ID ' + id + '):\n' + (hijos.length ? JSON.stringify(hijos, null, 2) : 'Ninguno');
+}
+
+function ejecJSON() {
+    const c = byId('conJSON');
+    if (!arbol || !arbol.raiz || arbol.raiz.hijos.length === 0) { c.textContent = 'Arbol vacio.'; return; }
+    const json = arbol.raiz.hijos.map(h => arbol.convertirJSON(h));
+    c.innerHTML = 'Arbol en JSON:\n' + JSON.stringify(json, null, 2);
 }
 
 // ================================
-// Buscar por nombre
+// Inicio
 // ================================
-
-function buscarNodos() {
-    const texto = document.getElementById('searchBox').value.trim();
-    const results = document.getElementById('searchResults');
-    if (!texto || !arbolGlobal || !arbolGlobal.raiz) {
-        results.innerHTML = '';
-        return;
-    }
-    const encontrados = arbolGlobal.buscarPorNombre(arbolGlobal.raiz, texto);
-    if (encontrados.length === 0) {
-        results.innerHTML = '<div style="font-size:12px;color:#7f8c9b">Sin resultados</div>';
-        return;
-    }
-    let html = '';
-    encontrados.forEach(n => {
-        html += '<div style="padding:4px 8px;font-size:12px;cursor:pointer;border-radius:3px" ' +
-                'onmouseover="this.style.background=\'#eef2f7\'" ' +
-                'onmouseout="this.style.background=\'\'" ' +
-                'onclick="seleccionarNodo(' + n.id + ', null);document.getElementById(\'searchBox\').value=\'\';this.parentElement.innerHTML=\'\'">' +
-                escapeHtml(n.nombre) + ' <span style="color:#9aabbb">(#' + n.id + ')</span></div>';
-    });
-    results.innerHTML = html;
-}
-
-// ================================
-// Inicialización
-// ================================
-
 cargarArbol();
 </script>
 </body>
